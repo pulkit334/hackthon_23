@@ -50,10 +50,13 @@ const Sidebar = () => {
 
 			{/* Bottom Section (User/Logout) */}
 			<div className="border-t border-gray-100 pt-6">
-				<button className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-gray-500 hover:bg-red-50 hover:text-red-600 transition-all">
+				<Link
+					to={"/login"}
+					className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-gray-500 hover:bg-red-50 hover:text-red-600 transition-all"
+				>
 					<i className="ri-logout-box-r-line text-xl"></i>
 					<span className="font-medium">Logout</span>
-				</button>
+				</Link>
 			</div>
 		</div>
 	);

@@ -1,12 +1,38 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.jpg";
+import { toast } from "react-toastify";
 
 const SignIn = () => {
+	const navigator = useNavigate();
+	const email = useRef(null);
+	const password = useRef(null);
+	const formHandler = (e) => {
+		e.preventDefault();
+		if (
+			!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(
+				email.current.value,
+			)
+		) {
+			toast.error("Email is not valid!");
+			return;
+		}
+		if (
+			!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(
+				password.current.value,
+			)
+		) {
+			toast.error(
+				"Password must be at least 8 characters and include a number, uppercase, lowercase, and special character.",
+			);
+			return;
+		}
+		navigator("/");
+	};
 	return (
 		<div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
 			{/* Main Card */}
-			<div className="w-full max-w-md bg-white rounded-3xl shadow-2xl shadow-gray-200 p-8 border border-gray-100">
+			<div className="w-full max-w-md bg-white rounded-3xl shadow-2xl shadow-gray-300 p-8 border border-gray-100">
 				{/* Header */}
 				<div className="text-center mb-8">
 					<img className="h-18 mx-auto" src={logo} alt="" />
@@ -15,7 +41,7 @@ const SignIn = () => {
 					</p>
 				</div>
 
-				<form className="flex flex-col gap-5">
+				<form onSubmit={formHandler} className="flex flex-col gap-5">
 					{/* Email Input Group */}
 					<div className="flex flex-col gap-1.5">
 						<label
@@ -27,6 +53,7 @@ const SignIn = () => {
 						<div className="relative">
 							<i className="ri-mail-line absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg"></i>
 							<input
+								ref={email}
 								type="email"
 								id="email"
 								placeholder="name@company.com"
@@ -48,6 +75,7 @@ const SignIn = () => {
 						<div className="relative">
 							<i className="ri-lock-2-line absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg"></i>
 							<input
+								ref={password}
 								type="password"
 								id="pass"
 								placeholder="••••••••"
