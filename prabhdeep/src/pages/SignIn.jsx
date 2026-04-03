@@ -7,6 +7,7 @@ const SignIn = () => {
 	const navigator = useNavigate();
 	const email = useRef(null);
 	const password = useRef(null);
+
 	const formHandler = (e) => {
 		e.preventDefault();
 		if (
@@ -29,6 +30,7 @@ const SignIn = () => {
 		}
 		navigator("/");
 	};
+
 	return (
 		<div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
 			{/* Main Card */}
@@ -71,6 +73,14 @@ const SignIn = () => {
 							>
 								Password
 							</label>
+
+							{/* NEW: Forgot Password Link */}
+							<Link
+								to="/forget-password"
+								className="text-sm font-bold text-indigo-600 hover:text-indigo-700 hover:underline transition-colors"
+							>
+								Forgot password?
+							</Link>
 						</div>
 						<div className="relative">
 							<i className="ri-lock-2-line absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg"></i>

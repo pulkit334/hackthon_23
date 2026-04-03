@@ -12,6 +12,7 @@ import SignIn from "./pages/SignIn.jsx";
 import SignUp from "./pages/SignUp.jsx";
 import { Provider } from "react-redux";
 import store from "./redux/store.jsx";
+import Forget from "./components/security/Forget.jsx";
 
 const appRouter = createBrowserRouter([
 	{
@@ -21,6 +22,10 @@ const appRouter = createBrowserRouter([
 	{
 		path: "/signup",
 		element: <SignUp />,
+	},
+	{
+		path: "/forget-password",
+		element: <Forget />,
 	},
 	{
 		path: "/",
