@@ -4,13 +4,13 @@ const DocAPi = {
     UplaodDocument : "/document-upload"
 }
 
-
 export const DocumentUpload = async (formData, config = {}) => {
     const response = await documentapi.post(DocAPi.UplaodDocument, formData, {
         ...config,
+    
+        withCredentials: true, 
         headers: {
-            "Content-Type": "multipart/form-data",
-            ...config.headers, //
+            ...config.headers, 
         },
     });
     return response.data;
