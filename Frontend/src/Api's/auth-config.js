@@ -11,4 +11,7 @@ export const documentapi = axios.create({
 });
 
 
-
+export const DocumentAnalytics = axios.create({
+     baseURL : import.meta.env.VITE_ANALYTICS_URL,
+    withCredentials : true
+})

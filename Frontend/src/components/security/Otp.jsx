@@ -128,24 +128,28 @@ const Otp = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full bg-white p-8 sm:p-10 rounded-3xl shadow-xl shadow-indigo-100/50 border border-gray-100">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-indigo-50 mb-4">
-            <i className="ri-shield-keyhole-line text-3xl text-indigo-600"></i>
+    <div className="min-h-screen flex items-center justify-center animated-gradient-bg px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        {/* Decorative elements */}
+        <div className="absolute top-[20%] left-[20%] w-72 h-72 bg-indigo-500/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-[20%] right-[20%] w-72 h-72 bg-purple-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1.5s' }}></div>
+
+      <div className="max-w-md w-full glass-card p-8 sm:p-12 rounded-[2.5rem] relative z-10">
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-white/60 mb-6 shadow-sm border border-white">
+            <i className="ri-shield-keyhole-fill text-4xl text-indigo-600"></i>
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          <h2 className="text-3xl font-extrabold text-gray-900 mb-3 tracking-tight">
             Verify your account
           </h2>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-600 font-medium leading-relaxed">
             We've sent a 6-character verification code to <br />
-            <span className="font-semibold text-gray-800">
+            <span className="font-bold text-indigo-600">
               {signupData?.email || "your email"}
             </span>
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-8">
           <div className="flex justify-center gap-2 sm:gap-3">
             {otp.map((digit, index) => (
               <input
@@ -158,7 +162,7 @@ const Otp = () => {
                 onChange={(e) => handleChange(e, index)}
                 onKeyDown={(e) => handleKeyDown(e, index)}
                 onPaste={handlePaste}
-                className="w-10 h-14 sm:w-12 sm:h-16 text-center text-xl sm:text-2xl font-bold text-gray-900 bg-gray-50 border-2 border-gray-200 rounded-xl focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all uppercase"
+                className="w-12 h-14 sm:w-14 sm:h-16 text-center text-2xl font-bold text-gray-900 bg-white/50 border border-gray-300/50 rounded-xl focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all uppercase shadow-inner block"
               />
             ))}
           </div>
@@ -166,15 +170,16 @@ const Otp = () => {
           <button
             type="submit"
             disabled={otp.join("").length !== 6}
-            className="w-full py-4 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl shadow-lg shadow-indigo-200 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-indigo-600 disabled:active:scale-100 mt-4"
+            className="w-full py-4 px-4 glass-button text-white font-bold text-lg rounded-2xl flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed group"
           >
-            Verify & Create Account
+            <span>Verify & Create Account</span>
+            <i className="ri-checkbox-circle-line text-xl transition-transform group-hover:scale-110"></i>
           </button>
         </form>
 
-        <div className="mt-8 text-center text-sm text-gray-500">
+        <div className="mt-8 pt-6 border-t border-gray-200/50 text-center text-sm text-gray-600 font-medium">
           Didn't receive the code?{" "}
-          <button className="font-semibold text-indigo-600 hover:text-indigo-500 hover:underline transition-all outline-none">
+          <button className="font-bold text-indigo-600 hover:text-indigo-800 transition-colors ml-1 hover:underline underline-offset-4">
             Resend Code
           </button>
         </div>

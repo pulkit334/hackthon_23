@@ -21,6 +21,8 @@ import Otp from "./components/security/Otp.jsx";
 import ProtectedRoute from "./components/security/ProtectedRoute.jsx";
 import ChangePass from "./components/security/ChangePass.jsx";
 import DeleteAccount from "./components/security/DeleteAccount.jsx";
+import Analytics from "./pages/Analytics.jsx";
+import FailureList from "./pages/FailureList.jsx";
 
 const appRouter = createBrowserRouter([
 	{
@@ -51,6 +53,14 @@ const appRouter = createBrowserRouter([
 			{
 				path: "/",
 				element: <Home />,
+			},
+			{
+				path: "/analytics",
+				element: <Analytics />,
+			},
+			{
+				path: "/analytics/failures",
+				element: <FailureList />,
 			},
 			{
 				path: "/settings",

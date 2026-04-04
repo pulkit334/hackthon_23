@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 
 const ProtectedRoute = ({ children }) => {
-    // 1. Grab the real authentication state from your Redux store
     const { isAuthenticated } = useSelector(store => store.user);
 
     if (!isAuthenticated) {
