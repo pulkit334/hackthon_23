@@ -1,4 +1,6 @@
 import React, { useRef, useState } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const FileUpload = () => {
     const fileInputRef = useRef(null);
@@ -9,25 +11,22 @@ const FileUpload = () => {
     const handleFileSelect = (files) => {
         if (!files) return;
 
-        // Define the exact extensions and types we want to allow
         const allowedExtensions = ['.pdf', '.docx', '.txt'];
         const maxFileSize = 15 * 1024 * 1024; // 15MB
 
         const validFiles = Array.from(files).filter(file => {
-            // 1. Check File Type (Images or specific extensions)
             const isImage = file.type.startsWith('image/');
             const hasValidExtension = allowedExtensions.some(ext => 
                 file.name.toLowerCase().endsWith(ext)
             );
 
             if (!isImage && !hasValidExtension) {
-                alert(`File skipped: "${file.name}". Only .pdf, .docx, .txt, and images are allowed.`);
+                toast.warning(`File skipped: "${file.name}". Only .pdf, .docx, .txt, and images are allowed.`);
                 return false;
             }
 
-            // 2. Check File Size
             if (file.size > maxFileSize) {
-                alert(`File skipped: "${file.name}". It exceeds the 15MB limit.`);
+                toast.warning(`File skipped: "${file.name}". It exceeds the 15MB limit.`);
                 return false;
             }
 
@@ -41,10 +40,18 @@ const FileUpload = () => {
         setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
     };
 
-    const handleUpload = async () => {
-        if (selectedFiles.length === 0) return;
+    // Changed from handleUpload to an onSubmit handler
+    const handleSubmit = async (e) => {
+        e.preventDefault(); // 🚨 Prevents the default browser page reload
+
+        if (selectedFiles.length === 0) {
+            toast.error("Please select at least one file.");
+            return;
+        }
 
         setIsUploading(true);
+        const uploadToastId = toast.loading("Uploading documents...");
+        
         const formData = new FormData();
         formData.append("documentCategory", docType);
 
@@ -53,29 +60,40 @@ const FileUpload = () => {
         });
 
         try {
-            const response = await fetch("https://your-api.com/endpoint", {
-                method: "POST",
-                body: formData,
+            const response = await axios.post(
+                "https://unstagnant-elida-heartrendingly.ngrok-free.dev/api/v2/document-upload",
+                formData
+            );
+
+            console.log("Upload successful:", response.data);
+            setSelectedFiles([]);
+            toast.update(uploadToastId, { 
+                render: "Documents uploaded successfully!", 
+                type: "success", 
+                isLoading: false, 
+                autoClose: 3000 
             });
 
-            if (!response.ok) throw new Error("Network response was not ok");
-
-            const data = await response.json();
-            console.log("Upload successful:", data);
-            
-            setSelectedFiles([]);
-            alert("Documents uploaded successfully!");
-
         } catch (error) {
-            console.error("Upload failed:", error);
-            alert("Failed to upload documents.");
+            console.error("Upload failed:", error.response?.data || error.message);
+            toast.update(uploadToastId, { 
+                render: "Failed to upload documents. Please try again.", 
+                type: "error", 
+                isLoading: false, 
+                autoClose: 4000 
+            });
         } finally {
             setIsUploading(false);
         }
     };
 
     return (
-        <div className="w-full max-w-5xl mx-auto p-4 grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+        // 1. Converted to a form and added encType
+        <form 
+            onSubmit={handleSubmit}
+            encType="multipart/form-data"
+            className="w-full max-w-5xl mx-auto p-4 grid grid-cols-1 md:grid-cols-2 gap-6 items-start"
+        >
             
             {/* COLUMN 1: File Upload Area */}
             <div className="space-y-4">
@@ -96,8 +114,8 @@ const FileUpload = () => {
                         ref={fileInputRef}
                         onChange={(e) => handleFileSelect(e.target.files)}
                         className="hidden"
-                        // Updated Accept Attribute
                         accept=".pdf, .docx, .txt, image/*"
+                        // Optional: you can add name="files" here too, though our JS handles it
                     />
                     <div className="flex flex-col items-center gap-3 pointer-events-none">
                         <div className="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center shrink-0">
@@ -106,7 +124,6 @@ const FileUpload = () => {
                         <p className="text-gray-600 text-sm">
                             <span className="text-indigo-600 font-bold group-hover:underline">Click here</span> to upload your file or drag.
                         </p>
-                        {/* Updated UI Text */}
                         <p className="text-gray-400 text-xs">
                             Supported Format: .pdf, .docx, .txt, images (Max 15MB)
                         </p>
@@ -126,11 +143,13 @@ const FileUpload = () => {
                                     </div>
                                 </div>
                                 <button
+                                    type="button" // Important: Prevents this button from submitting the form
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         removeFile(index);
                                     }}
                                     className="text-gray-400 hover:text-red-500 p-1"
+                                    disabled={isUploading}
                                 >
                                     <i className="ri-delete-bin-line text-lg"></i>
                                 </button>
@@ -146,13 +165,14 @@ const FileUpload = () => {
                     <h2 className="text-lg font-semibold text-gray-800 mb-4">2. Document Category</h2>
                     
                     <div className="flex flex-col gap-3">
-                        <label className={`flex items-center p-4 border rounded-xl cursor-pointer transition-all ${docType === "legal" ? "border-indigo-500 bg-indigo-50/50" : "border-gray-200 bg-white hover:bg-gray-50"}`}>
+                        <label className={`flex items-center p-4 border rounded-xl cursor-pointer transition-all ${docType === "legal" ? "border-indigo-500 bg-indigo-50/50" : "border-gray-200 bg-white hover:bg-gray-50"} ${isUploading ? "opacity-50 cursor-not-allowed" : ""}`}>
                             <input
                                 type="radio"
                                 name="docType"
                                 value="legal"
                                 checked={docType === "legal"}
                                 onChange={(e) => setDocType(e.target.value)}
+                                disabled={isUploading}
                                 className="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
                             />
                             <div className="ml-3">
@@ -161,13 +181,14 @@ const FileUpload = () => {
                             </div>
                         </label>
 
-                        <label className={`flex items-center p-4 border rounded-xl cursor-pointer transition-all ${docType === "financial" ? "border-indigo-500 bg-indigo-50/50" : "border-gray-200 bg-white hover:bg-gray-50"}`}>
+                        <label className={`flex items-center p-4 border rounded-xl cursor-pointer transition-all ${docType === "financial" ? "border-indigo-500 bg-indigo-50/50" : "border-gray-200 bg-white hover:bg-gray-50"} ${isUploading ? "opacity-50 cursor-not-allowed" : ""}`}>
                             <input
                                 type="radio"
                                 name="docType"
                                 value="financial"
                                 checked={docType === "financial"}
                                 onChange={(e) => setDocType(e.target.value)}
+                                disabled={isUploading}
                                 className="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
                             />
                             <div className="ml-3">
@@ -181,7 +202,7 @@ const FileUpload = () => {
                 <hr className="border-gray-200" />
 
                 <button
-                    onClick={handleUpload}
+                    type="submit" // 2. Changed to submit type
                     disabled={selectedFiles.length === 0 || isUploading}
                     className="w-full bg-indigo-600 text-white py-3 px-4 rounded-xl font-medium hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex justify-center items-center gap-2"
                 >
@@ -195,7 +216,7 @@ const FileUpload = () => {
                 </button>
             </div>
             
-        </div>
+        </form>
     );
 };
 

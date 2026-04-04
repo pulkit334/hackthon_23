@@ -56,16 +56,17 @@ const Otp = () => {
 			inputRefs.current[focusIndex].focus();
 		}
 	};
-
+	let tid;
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		const finalCode = otp.join("");
 		// 5. Require 6 digits for submission
 		if (finalCode.length === 6) {
-			toast.info(`Verifying code: ${finalCode}`);
+			toast.success(`succesfully Logging....`, { id: tid });
 			// Add your API verification logic here
+
 			dispatch(setIsAuth());
-			navigator("/");
+			setTimeout(() => navigator("/"), 2000);
 		}
 	};
 

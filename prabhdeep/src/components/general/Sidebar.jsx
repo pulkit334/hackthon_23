@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
+import { useDispatch } from "react-redux";
+// Note: Update this path to wherever your actual auth slice is located
+import { logout } from "../../redux/userSlice";
 import image from "../../assets/logo.jpg";
 
 const Sidebar = () => {
-	// State to manage mobile sidebar toggle
 	const [isOpen, setIsOpen] = useState(false);
+	const dispatch = useDispatch(); // Initialize dispatch
 
-	// Utility to handle active vs inactive styles
 	const navLinkClass = ({ isActive }) =>
 		`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ${
 			isActive
@@ -14,8 +16,13 @@ const Sidebar = () => {
 				: "text-gray-500 hover:bg-indigo-50 hover:text-indigo-600"
 		}`;
 
-	// Function to close sidebar on mobile when a link is clicked
 	const closeSidebar = () => setIsOpen(false);
+
+	// Custom handler for logging out
+	const handleLogout = () => {
+		dispatch(logout()); // 1. Dispatch the logout action
+		closeSidebar(); // 2. Close the mobile sidebar
+	};
 
 	return (
 		<>
@@ -98,9 +105,10 @@ const Sidebar = () => {
 
 				{/* Bottom Section (User/Logout) */}
 				<div className="border-t border-gray-100 pt-6">
+					{/* Replaced closeSidebar with handleLogout */}
 					<Link
 						to={"/login"}
-						onClick={closeSidebar}
+						onClick={handleLogout}
 						className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-gray-500 hover:bg-red-50 hover:text-red-600 transition-all"
 					>
 						<i className="ri-logout-box-r-line text-xl"></i>
