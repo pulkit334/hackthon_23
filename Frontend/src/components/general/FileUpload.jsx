@@ -272,15 +272,6 @@ const FileUpload = () => {
                                         <div className="flex items-center gap-2 shrink-0">
                                             <button
                                                 type="button"
-                                                onClick={() => triggerSupportUpload(group.id)}
-                                                disabled={isUploading || group.supportFiles.length >= 5 || sizePercentage >= 100}
-                                                className={`text-sm font-bold px-4 py-2 rounded-xl transition-all flex items-center gap-1.5 shadow-sm active:scale-95 ${group.supportFiles.length >= 5 || sizePercentage >= 100 ? "bg-gray-100 text-gray-400 cursor-not-allowed" : "bg-white border text-indigo-600 hover:bg-indigo-50 hover:border-indigo-200"}`}
-                                            >
-                                                <i className="ri-attachment-2"></i>{" "}
-                                                {group.supportFiles.length >= 5 ? "Limit Reached" : "Attach"}
-                                            </button>
-                                            <button
-                                                type="button"
                                                 onClick={() => removeMainDocument(group.id)}
                                                 disabled={isUploading}
                                                 className="text-gray-400 hover:text-red-500 w-10 h-10 flex items-center justify-center bg-white border border-gray-100 rounded-xl hover:bg-red-50 hover:border-red-100 transition-colors shadow-sm"

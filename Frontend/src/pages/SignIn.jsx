@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.jpg";
 import { toast } from "react-toastify";
@@ -11,6 +11,7 @@ const SignIn = () => {
     const dispatch = useDispatch();
     const email = useRef(null);
     const password = useRef(null);
+    const [showPassword, setShowPassword] = useState(false);
 
     const formHandler = async (e) => {
         e.preventDefault();
@@ -109,11 +110,18 @@ const SignIn = () => {
                                 <i className="ri-lock-2-line absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg transition-colors group-focus-within:text-indigo-600 pointer-events-none"></i>
                                 <input
                                     ref={password}
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     id="pass"
                                     placeholder="••••••••"
-                                    className="w-full pl-12 pr-4 py-3.5 bg-gray-50/50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 focus:bg-white transition-all placeholder:text-gray-400 text-gray-800 font-medium tracking-wider"
+                                    className="w-full pl-12 pr-12 py-3.5 bg-gray-50/50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 focus:bg-white transition-all placeholder:text-gray-400 text-gray-800 font-medium tracking-wider"
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-indigo-600 transition-colors bg-white/50 p-1 rounded-md backdrop-blur-sm"
+                                >
+                                    <i className={showPassword ? "ri-eye-off-line" : "ri-eye-line text-lg"}></i>
+                                </button>
                             </div>
                         </div>
 
